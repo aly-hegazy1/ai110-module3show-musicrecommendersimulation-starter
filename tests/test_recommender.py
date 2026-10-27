@@ -59,3 +59,17 @@ def test_explain_recommendation_returns_non_empty_string():
     explanation = rec.explain_recommendation(user, song)
     assert isinstance(explanation, str)
     assert explanation.strip() != ""
+
+
+def test_genre_and_mood_matching_ignores_case():
+    user = UserProfile(
+        favorite_genre="Pop",
+        favorite_mood="HAPPY",
+        target_energy=0.8,
+        likes_acoustic=False,
+    )
+    rec = make_small_recommender()
+    explanation = rec.explain_recommendation(user, rec.songs[0])
+
+    assert "genre match" in explanation
+    assert "mood match" in explanation

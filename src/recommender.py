@@ -84,6 +84,11 @@ def load_songs(csv_path: str) -> List[Dict]:
     print(f"Loaded songs: {len(songs)}")
     return songs
 
+def normalize(text: Optional[str]) -> str:
+    """Lowercase and trim a label so "Pop " and "pop" compare equal."""
+    return (text or "").strip().lower()
+
+
 def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     """
     Scores a single song against user preferences.
@@ -92,11 +97,11 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     score = 0.0
     reasons = []
 
-    if song["genre"] == user_prefs.get("genre"):
+    if normalize(song["genre"]) == normalize(user_prefs.get("genre")):
         score += GENRE_POINTS
         reasons.append(f"genre match: {song['genre']} (+{GENRE_POINTS:.1f})")
 
-    if song["mood"] == user_prefs.get("mood"):
+    if normalize(song["mood"]) == normalize(user_prefs.get("mood")):
         score += MOOD_POINTS
         reasons.append(f"mood match: {song['mood']} (+{MOOD_POINTS:.1f})")
 
